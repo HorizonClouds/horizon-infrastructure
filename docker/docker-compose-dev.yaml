@@ -1,6 +1,7 @@
 version: '3.8' 
 services:
   ############### MICROSERVICES ############### 
+  ################### FEEDS ################### 
   feeds:
     container_name: horizon-feeds
     image: javifdez7/horizon-feeds:develop
@@ -13,19 +14,46 @@ services:
     volumes:
       - '../logs/feeds:/opt/app/logs'
     ports:
-      - '6001:80'
+      - '6101:80'
     mem_limit: 400m
     restart: unless-stopped
-  ############### DATABASES ###############
+  #########################################
   horizon-mongo-feeds:
     container_name: horizon-mongo-feeds
     image: mongo:6.0
     volumes:
       - horizon-mongo-feeds-volume:/data/db
     ports:
-      - "5001:27017"
+      - "6102:27017"
+    mem_limit: 2000m
+    restart: unless-stopped
+  ################### CHATS ###################
+  chats:
+    container_name: horizon-chats
+    image: javifdez7/horizon-chats:develop
+    environment:
+      NODE_ENV: development
+      BACKEND_PORT: 80
+      MONGODB_URI: mongodb://horizon-mongo-chats:27017/microservice
+      DEBUG: 'true'
+      LOGLEVEL: INFO
+    volumes:
+      - '../logs/chats:/opt/app/logs'
+    ports:
+      - '6103:80'
+    mem_limit: 400m
+    restart: unless-stopped  
+  #########################################
+  horizon-mongo-chats:
+    container_name: horizon-mongo-chats
+    image: mongo:6.0
+    volumes:
+      - horizon-mongo-chats-volume:/data/db
+    ports:
+      - "6104:27017"
     mem_limit: 2000m
     restart: unless-stopped
 
 volumes:
   horizon-mongo-feeds-volume:
+  horizon-mongo-chats-volume:
