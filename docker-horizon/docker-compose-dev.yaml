@@ -53,7 +53,7 @@ services:
     ports:
       - '6103:80'
     mem_limit: 400m
-    restart: unless-stopped  
+    restart: unless-stopped
     depends_on:
       - horizon-mongo-chats
       - kafka
@@ -67,7 +67,7 @@ services:
       - "6104:27017"
     mem_limit: 2000m
     restart: unless-stopped
- ################### LOGGER ###################
+  ################### LOGGER ###################
   logger:
     container_name: horizon-logger
     image: javifdez7/horizon-logger:develop
@@ -84,7 +84,7 @@ services:
     restart: unless-stopped
     depends_on:
       - kafka
- ################### ZOOKEEPER ################
+  ################### ZOOKEEPER ################
   zookeeper:
     container_name: zookeeper
     image: zookeeper:3.4.13
@@ -92,7 +92,7 @@ services:
       - "2181:2181"
     mem_limit: 300m
     restart: unless-stopped
- ################### KAFKA ####################
+  ################### KAFKA ####################
   kafka:
     container_name: kafka
     image: confluentinc/cp-kafka:latest
@@ -122,7 +122,7 @@ services:
     ports:
       - '6301:80'
     mem_limit: 400m
-    restart: unless-stopped  
+    restart: unless-stopped
   #########################################
   horizon-mongo-analytics-reports:
     container_name: horizon-mongo-analytics-reports
@@ -134,8 +134,35 @@ services:
     mem_limit: 2000m
     restart: unless-stopped
 
+  ################### NOTIFICATIONS ###################
+  notifications:
+    container_name: horizon-notifications
+    image: javifdez7/horizon-notifications:develop
+    environment:
+      NODE_ENV: development
+      BACKEND_PORT: 80
+      MONGODB_URI: mongodb://horizon-mongo-notifications:27017/microservice
+      DEBUG: 'true'
+      LOGLEVEL: INFO
+    volumes:
+      - '../logs/notifications:/opt/app/logs'
+    ports:
+      - '6303:80'
+    mem_limit: 400m
+    restart: unless-stopped
+  #########################################
+  horizon-mongo-notifications:
+    container_name: horizon-mongo-notifications
+    image: mongo:6.0
+    volumes:
+      - horizon-mongo-notifications-volume:/data/db
+    ports:
+      - "6304:27017"
+    mem_limit: 2000m
+    restart: unless-stopped
 
 volumes:
   horizon-mongo-feeds-volume:
   horizon-mongo-chats-volume:
   horizon-mongo-analytics-reports-volume:
+  horizon-mongo-notifications-volume:
