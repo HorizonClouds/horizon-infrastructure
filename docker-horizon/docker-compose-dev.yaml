@@ -1,4 +1,4 @@
-version: '3.8' 
+version: '3.8'
 services:
   ############### MICROSERVICES ############### 
   ################### FEEDS ################### 
@@ -11,12 +11,19 @@ services:
       MONGODB_URI: mongodb://horizon-mongo-feeds:27017/microservice
       DEBUG: 'true'
       LOGLEVEL: INFO
+      KAFKA_ENABLED: 'true'
+      KAFKA_BROKER: kafka:9092
+      KAFKA_TOPIC: logs
+      KAFKA_SERVICE_NAME: FEEDS
     volumes:
       - '../logs/feeds:/opt/app/logs'
     ports:
       - '6101:80'
     mem_limit: 400m
     restart: unless-stopped
+    depends_on:
+      - horizon-mongo-feeds
+      - kafka
   #########################################
   horizon-mongo-feeds:
     container_name: horizon-mongo-feeds
@@ -37,12 +44,19 @@ services:
       MONGODB_URI: mongodb://horizon-mongo-chats:27017/microservice
       DEBUG: 'true'
       LOGLEVEL: INFO
+      KAFKA_ENABLED: 'true'
+      KAFKA_BROKER: kafka:9092
+      KAFKA_TOPIC: logs
+      KAFKA_SERVICE_NAME: CHATS
     volumes:
       - '../logs/chats:/opt/app/logs'
     ports:
       - '6103:80'
     mem_limit: 400m
     restart: unless-stopped  
+    depends_on:
+      - horizon-mongo-chats
+      - kafka
   #########################################
   horizon-mongo-chats:
     container_name: horizon-mongo-chats
@@ -53,6 +67,45 @@ services:
       - "6104:27017"
     mem_limit: 2000m
     restart: unless-stopped
+ ################### LOGGER ###################
+  logger:
+    container_name: horizon-logger
+    image: javifdez7/horizon-logger:develop
+    environment:
+      BACKEND_PORT: 6900
+      KAFKA_BROKER: kafka:9092
+      KAFKA_TOPIC: logs
+      LOG_FILE_PATH: src/logs/logfile.log
+    volumes:
+      - '../logs/logger:/opt/app/logs'
+    ports:
+      - '6900:80'
+    mem_limit: 400m
+    restart: unless-stopped
+    depends_on:
+      - kafka
+ ################### ZOOKEEPER ################
+  zookeeper:
+    container_name: zookeeper
+    image: zookeeper:3.4.13
+    ports:
+      - "2181:2181"
+    mem_limit: 300m
+    restart: unless-stopped
+ ################### KAFKA ####################
+  kafka:
+    container_name: kafka
+    image: confluentinc/cp-kafka:latest
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
+    mem_limit: 500m
+    restart: unless-stopped
+    depends_on:
+      - zookeeper
 
 volumes:
   horizon-mongo-feeds-volume:
