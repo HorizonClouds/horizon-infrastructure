@@ -13,8 +13,8 @@ docker-compose -f docker-horizon/docker-compose-dev.yaml --env-file .env pull
 
 |   | Microservicio         | Puerto   | Docker Image            |   |
 |---|-----------------------|----------|-------------------------|---|
-|   | Front-end             | 6000     |                         |   |
-|   | Logger                | 6900     |                         |   |
+|   | Front-end             | 6900     |                         |   |
+|   | Logger                | 6901     |                         |   |
 |   | Zookeeper             | 2181     |                         |   |
 |   | Kafka                 | 9092     |                         |   |
 

@@ -72,14 +72,14 @@ services:
     container_name: horizon-logger
     image: javifdez7/horizon-logger:develop
     environment:
-      BACKEND_PORT: 6900
+      BACKEND_PORT: 6901
       KAFKA_BROKER: kafka:9092
       KAFKA_TOPIC: logs
       LOG_FILE_PATH: src/logs/logfile.log
     volumes:
       - '../logs/logger:/opt/app/logs'
     ports:
-      - '6900:80'
+      - '6901:80'
     mem_limit: 400m
     restart: unless-stopped
     depends_on:
