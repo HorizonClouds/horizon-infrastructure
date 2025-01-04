@@ -143,6 +143,81 @@ services:
   ############## JOSE Y ALEX ###################
   ############## ISMAEL Y JUAN #################
   ############## CLAUDIA Y MANUEL ##############
+  # have itineraries itineraries mongo , meteo and meteo redis
+  itineraries:
+    container_name: horizon-itineraries
+    image: javifdez7/horizon-itineraries:develop
+    environment:
+      NODE_ENV: development
+      BACKEND_PORT: 80
+      MONGODB_URI: mongodb://horizon-mongo-itineraries:6402/itineraries
+      KAFKA_ENABLED: 'true'
+      KAFKA_BROKER: kafka:9092
+      KAFKA_TOPIC: logs
+      KAFKA_SERVICE_NAME: ITINERARY
+      LOG_LEVEL: DEBUG
+    ports:
+      - '6401:80'
+    mem_limit: 400m
+    restart: unless-stopped
+    depends_on:
+      - horizon-mongo-itineraries
+      - logger
+      - api-gateway
+    
+  horizon-mongo-itineraries:
+    container_name: horizon-mongo-itineraries
+    image: mongo:6.0
+    volumes:
+      - horizon-mongo-itineraries-volume:/data/db
+    ports:
+      - "6402:27017"
+    mem_limit: 2000m
+    restart: unless-stopped
+  
+  meteo:
+    container_name: horizon-meteo
+    image: javifdez7/horizon-meteo:develop
+    environment:
+      NODE_ENV: development
+      BACKEND_PORT: 80
+      MAX_REQUESTS_PER_MINUTE: 10
+      MIN_INTERVAL_BETWEEN_REQUESTS: 1000
+      USE_MOCK_API: 'true'
+      JWT_SECRET: meteo-secret
+      ALLOWED_SERVICES: itineraries-service
+      METEO_CIRCUIT_BREAKER_FAILURE_THRESHOLD: 5
+      METEO_CIRCUIT_BREAKER_SUCCESS_THRESHOLD: 3
+      METEO_CIRCUIT_BREAKER_RESET_TIMEOUT: 15000
+      REDIS_HOST: horizon-redis-meteo
+      REDIS_PORT: 6379 # Internal
+      REDIS_TTL: 86400
+      KAFKA_ENABLED: 'true'
+      KAFKA_BROKER: kafka:9092
+      KAFKA_TOPIC: logs
+      KAFKA_SERVICE_NAME: METEO
+      LOGLEVEL: DEBUG
+    ports:
+      - '6403:80'
+    mem_limit: 400m
+    restart: unless-stopped
+    depends_on:
+      - horizon-redis-meteo
+      - logger
+      - api-gateway
+  
+  horizon-redis-meteo:
+    container_name: horizon-redis-meteo
+    image: redis:6.0
+    ports:
+      - "6404:6379"
+    volumes:
+      - horizon-redis-meteo-volume:/data
+    mem_limit: 2000m
+    restart: unless-stopped
+  
+
+
   ############## LUIS Y ANTONO #################
 
 
@@ -150,5 +225,7 @@ services:
 volumes:
   horizon-mongo-feeds-volume:
   horizon-mongo-chats-volume:
+  horizon-mongo-itineraries-volume:
+  horizon-redis-meteo-volume:
 
   #============== NETWORKS ==============# 
