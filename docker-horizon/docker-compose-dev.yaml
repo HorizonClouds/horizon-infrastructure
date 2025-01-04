@@ -10,6 +10,7 @@ services:
       PORT: 80
       THROTTLE_LIMIT: 10000 # Max requests
       THROTTLE_WINDOW: 15 # in minutes
+      JWT_SECRET: horizon-secret
     ports:
       - '6900:80'
     mem_limit: 400m
@@ -80,8 +81,8 @@ services:
       NODE_ENV: development
       BACKEND_PORT: 80
       MONGODB_URI: mongodb://horizon-mongo-feeds:27017/microservice
-      DEBUG: 'true'
       LOGLEVEL: INFO
+      JWT_SECRET: horizon-secret
       KAFKA_ENABLED: 'true'
       KAFKA_BROKER: kafka:9092
       KAFKA_TOPIC: logs
@@ -114,8 +115,8 @@ services:
       NODE_ENV: development
       BACKEND_PORT: 80
       MONGODB_URI: mongodb://horizon-mongo-chats:27017/microservice
-      DEBUG: 'true'
       LOGLEVEL: INFO
+      JWT_SECRET: horizon-secret
       KAFKA_ENABLED: 'true'
       KAFKA_BROKER: kafka:9092
       KAFKA_TOPIC: logs
@@ -157,6 +158,10 @@ services:
       - '6201:80'
     mem_limit: 400m
     restart: unless-stopped
+    depends_on:
+      - horizon-mongo-users
+      - logger
+      - api-gateway
   #########################################
   horizon-mongo-users:
     container_name: horizon-mongo-users
