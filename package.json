@@ -1,0 +1,32 @@
+{
+  "name": "horizon-infrastructure",
+  "version": "1.0.0",
+  "description": "Horizon Infrastructure",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest",
+    "test:integration": "vitest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HorizonClouds/horizon-infrastructure.git"
+  },
+  "keywords": [
+    "microservices",
+    "api",
+    "rest",
+    "travel"
+  ],
+  "author": "Manuel Otero",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HorizonClouds/horizon-infrastructure/issues"
+  },
+  "homepage": "https://github.com/HorizonClouds/horizon-infrastructure#readme",
+  "devDependencies": {
+    "axios": "^1.7.9",
+    "dotenv": "^16.4.7",
+    "jsonwebtoken": "^9.0.2",
+    "vitest": "^2.1.8"
+  }
+}
