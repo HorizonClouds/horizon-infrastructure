@@ -28,6 +28,8 @@ docker-compose -f docker-horizon/docker-compose-dev.yaml --env-file .env pull
 |   | Feeds database        | 6102     |                         |   |
 |   | Chats                 | 6103     |                         |   |
 |   | Chats database        | 6104     |                         |   |
+|   | Feeds REDIS           | 6105     |                         |   |
+
 
 # Jose y Alex (62XX)
 

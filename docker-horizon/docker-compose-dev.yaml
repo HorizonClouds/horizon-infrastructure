@@ -89,6 +89,9 @@ services:
       KAFKA_TOPIC: logs
       KAFKA_SERVICE_NAME: FEEDS
       GATEWAY_URL: http://api-gateway:80
+      REDIS_HOST: horizon-redis-feeds
+      REDIS_PORT: 6379 # Internal
+      REDIS_TTL: 60
     volumes:
       - '../logs/feeds:/opt/app/logs'
     ports:
@@ -99,6 +102,7 @@ services:
       - horizon-mongo-feeds
       - logger
       - api-gateway
+      - horizon-redis-feeds
   #########################################
   horizon-mongo-feeds:
     container_name: horizon-mongo-feeds
@@ -107,6 +111,16 @@ services:
       - horizon-mongo-feeds-volume:/data/db
     ports:
       - "6102:27017"
+    mem_limit: 2000m
+    restart: unless-stopped
+  ###########################################
+  horizon-redis-feeds:
+    container_name: horizon-redis-feeds
+    image: redis:6.0
+    ports:
+      - "6105:6379"
+    volumes:
+      - horizon-redis-feeds-volume:/data
     mem_limit: 2000m
     restart: unless-stopped
   ################### CHATS ###################
@@ -324,6 +338,7 @@ services:
 volumes:
   horizon-mongo-users-volume:
   horizon-mongo-feeds-volume:
+  horizon-redis-feeds-volume:
   horizon-mongo-chats-volume:
   horizon-mongo-itineraries-volume:
   horizon-redis-meteo-volume:

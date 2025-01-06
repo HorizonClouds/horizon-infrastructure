@@ -29,12 +29,26 @@ services:
       KAFKA_TOPIC: logs
       KAFKA_SERVICE_NAME: FEEDS
       GATEWAY_URL: http://horizon-api-gateway:80
+      REDIS_HOST: horizon-redis-feeds
+      REDIS_PORT: 6379 # Internal
+      REDIS_TTL: 60
     ports:
       - '6101:80'
     mem_limit: 400m
     restart: unless-stopped
     depends_on:
       - api-gateway
+      - horizon-redis-feeds
+
+  horizon-redis-feeds:
+    container_name: horizon-redis-feeds
+    image: redis:6.0
+    ports:
+      - "6105:6379"
+    volumes:
+      - horizon-redis-feeds-volume:/data
+    mem_limit: 2000m
+    restart: unless-stopped
 
   itineraries:
     container_name: horizon-itineraries
@@ -99,3 +113,4 @@ services:
       - api-gateway
 volumes:
   horizon-redis-meteo-volume:
+  horizon-redis-feeds-volume:
