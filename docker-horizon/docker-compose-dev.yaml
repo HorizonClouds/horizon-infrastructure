@@ -92,6 +92,8 @@ services:
       REDIS_HOST: horizon-redis-feeds
       REDIS_PORT: 6379 # Internal
       REDIS_TTL: 60
+      THROTTLE_WINDOW_MS: 10000
+      THROTTLE_MAX: 100
     volumes:
       - '../logs/feeds:/opt/app/logs'
     ports:
