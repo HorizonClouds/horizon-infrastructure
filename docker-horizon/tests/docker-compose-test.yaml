@@ -22,8 +22,9 @@ services:
       BACKEND_PORT: 80
       MONGODB_URI: mongodb://horizon-mongo-feeds:27017/feeds
       LOGLEVEL: DEBUG
+      INFRASTRUCTURE_INTEGRATION: 'true'
       JWT_SECRET: horizon-secret
-      KAFKA_ENABLED: truent
+      KAFKA_ENABLED: 'false'
       KAFKA_BROKER: kafka:9092
       KAFKA_TOPIC: logs
       KAFKA_SERVICE_NAME: FEEDS
