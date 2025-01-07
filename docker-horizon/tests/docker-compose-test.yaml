@@ -32,9 +32,14 @@ services:
       REDIS_CACHE_ENABLED: 'true'
       REDIS_HOST: horizon-redis-feeds
       REDIS_PORT: 6379 # Internal
-      REDIS_TTL: 60
+      REDIS_TTL: 10
       THROTTLE_WINDOW_MS: 10000
       THROTTLE_MAX: 100
+      RL_MAX_REQUESTS_PER_MINUTE: 100
+      RL_MIN_INTERVAL_BETWEEN_REQUESTS: 0
+      CBREAKER_FAILURE_THRESHOLD: 5
+      CBREAKER_SUCCESS_THRESHOLD: 3
+      CBREAKER_RESET_TIMEOUT: 30000
     ports:
       - '6101:80'
     mem_limit: 400m
