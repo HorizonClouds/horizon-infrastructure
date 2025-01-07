@@ -337,6 +337,43 @@ services:
     mem_limit: 2000m
     restart: unless-stopped
   ############## LUIS Y ANTONO #################
+  ################# PUBLICATIONS #################
+
+  analytics-reports:
+    container_name: horizon-publications
+    image: javifdez7/horizon-publications:develop
+    environment:
+      NODE_ENV: development
+      BACKEND_PORT: 80
+      MONGODB_URI: mongodb://horizon-mongo-publications:27017/microservice
+      DEBUG: 'true'
+      LOGLEVEL: INFO
+      KAFKA_ENABLED: 'true'
+      KAFKA_BROKER: kafka:9092
+      KAFKA_TOPIC: logs
+      KAFKA_SERVICE_NAME: ANALYTICS
+    volumes:
+      - '../logs/publications:/opt/app/logs'
+    ports:
+      - '6501:80'
+    mem_limit: 400m
+    restart: unless-stopped
+    depends_on:
+      - horizon-mongo-publications
+      - logger
+      - api-gateway
+  #########################################
+  horizon-mongo-publications:
+    container_name: horizon-mongo-publications
+    image: mongo:6.0
+    volumes:
+      - horizon-mongo-publications-volume:/data/db
+    ports:
+      - "6502:27017"
+    mem_limit: 2000m
+    restart: unless-stopped
+
+  #########################################
 
 
   #============== VOLUMES ==============# 
@@ -348,5 +385,6 @@ volumes:
   horizon-mongo-itineraries-volume:
   horizon-redis-meteo-volume:
   horizon-mongo-analytics-reports-volume:
-  horizon-mongo-notifications-volume: 
+  horizon-mongo-notifications-volume:
+  horizon-mongo-publications-volume:
         #============== NETWORKS ==============# 
