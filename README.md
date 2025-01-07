@@ -8,6 +8,13 @@ Comando para actualizar las imágenes de los microservicios. Este comando se usa
 ```
 docker-compose -f docker-horizon/docker-compose-dev.yaml --env-file .env pull
 ```
+
+
+Los dos comandos anteriores se pueden ejecutar en un solo comando. 
+```
+docker-compose -f docker-horizon/docker-compose-dev.yaml --env-file .env pull && docker-compose -f docker-horizon/docker-compose-dev.yaml --env-file .env up -d
+```
+
 ---
 # Contenedores Grupales. Puertos 
 
