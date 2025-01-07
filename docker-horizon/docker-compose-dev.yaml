@@ -89,6 +89,7 @@ services:
       KAFKA_TOPIC: logs
       KAFKA_SERVICE_NAME: FEEDS
       GATEWAY_URL: http://api-gateway:80
+      REDIS_CACHE_ENABLED: 'true'
       REDIS_HOST: horizon-redis-feeds
       REDIS_PORT: 6379 # Internal
       REDIS_TTL: 60
@@ -139,6 +140,8 @@ services:
       KAFKA_BROKER: kafka:9092
       KAFKA_TOPIC: logs
       KAFKA_SERVICE_NAME: CHATS
+      THROTTLE_WINDOW_MS: 10000
+      THROTTLE_MAX: 100
     volumes:
       - '../logs/chats:/opt/app/logs'
     ports:

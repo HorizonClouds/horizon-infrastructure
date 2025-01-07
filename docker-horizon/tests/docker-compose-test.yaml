@@ -29,6 +29,7 @@ services:
       KAFKA_TOPIC: logs
       KAFKA_SERVICE_NAME: FEEDS
       GATEWAY_URL: http://horizon-api-gateway:80
+      REDIS_CACHE_ENABLED: 'true'
       REDIS_HOST: horizon-redis-feeds
       REDIS_PORT: 6379 # Internal
       REDIS_TTL: 60
