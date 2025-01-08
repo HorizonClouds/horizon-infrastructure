@@ -140,6 +140,7 @@ services:
       BACKEND_PORT: 80
       MONGODB_URI: mongodb://horizon-mongo-chats:27017/microservice
       LOGLEVEL: INFO
+      INFRASTRUCTURE_INTEGRATION: 'true'
       JWT_SECRET: horizon-secret
       KAFKA_ENABLED: 'true'
       KAFKA_BROKER: kafka:9092
