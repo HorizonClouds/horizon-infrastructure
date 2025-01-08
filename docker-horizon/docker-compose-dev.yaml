@@ -92,7 +92,7 @@ services:
       REDIS_CACHE_ENABLED: 'true'
       REDIS_HOST: horizon-redis-feeds
       REDIS_PORT: 6379 # Internal
-      REDIS_TTL: 60
+      REDIS_TTL: 10
       THROTTLE_WINDOW_MS: 10000
       THROTTLE_MAX: 100
       RL_MAX_REQUESTS_PER_MINUTE: 100
