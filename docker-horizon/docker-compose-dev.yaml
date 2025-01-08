@@ -95,6 +95,11 @@ services:
       REDIS_TTL: 60
       THROTTLE_WINDOW_MS: 10000
       THROTTLE_MAX: 100
+      RL_MAX_REQUESTS_PER_MINUTE: 100
+      RL_MIN_INTERVAL_BETWEEN_REQUESTS: 0
+      CBREAKER_FAILURE_THRESHOLD: 5
+      CBREAKER_SUCCESS_THRESHOLD: 3
+      CBREAKER_RESET_TIMEOUT: 30000
     volumes:
       - '../logs/feeds:/opt/app/logs'
     ports:
@@ -135,6 +140,7 @@ services:
       BACKEND_PORT: 80
       MONGODB_URI: mongodb://horizon-mongo-chats:27017/microservice
       LOGLEVEL: INFO
+      INFRASTRUCTURE_INTEGRATION: 'true'
       JWT_SECRET: horizon-secret
       KAFKA_ENABLED: 'true'
       KAFKA_BROKER: kafka:9092
