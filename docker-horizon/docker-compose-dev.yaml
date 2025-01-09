@@ -205,7 +205,7 @@ services:
     container_name: horizon-analytics-reports
     image: javifdez7/horizon-analytics-reports:develop
     environment:
-      NODE_ENV: development
+      NODE_ENV: production
       BACKEND_PORT: 80
       MONGODB_URI: mongodb://horizon-mongo-analytics-reports:27017/microservice
       DEBUG: 'true'
@@ -240,7 +240,7 @@ services:
     container_name: horizon-notifications
     image: javifdez7/horizon-notifications:develop
     environment:
-      NODE_ENV: development
+      NODE_ENV: production
       BACKEND_PORT: 80
       MONGODB_URI: mongodb://horizon-mongo-notifications:27017/microservice
       DEBUG: 'true'
