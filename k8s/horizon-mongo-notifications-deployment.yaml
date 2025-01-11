@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: >-
+      C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe convert
+      -f ../docker-horizon/docker-compose-dev.yaml
+    kompose.version: 1.35.0 (9532ceef3)
+  labels:
+    io.kompose.service: horizon-mongo-notifications
+  name: horizon-mongo-notifications
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: horizon-mongo-notifications
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: >-
+          C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+          convert -f ../docker-horizon/docker-compose-dev.yaml
+        kompose.version: 1.35.0 (9532ceef3)
+      labels:
+        io.kompose.service: horizon-mongo-notifications
+    spec:
+      containers:
+        - image: mongo:6.0
+          name: horizon-mongo-notifications
+          ports:
+            - containerPort: 27017
+              protocol: TCP
+          resources:
+            limits:
+              memory: '2097152e3'
+          volumeMounts:
+            - mountPath: /data/db
+              name: horizon-mongo-notifications-volume
+      restartPolicy: Always
+      volumes:
+        - name: horizon-mongo-notifications-volume
+          persistentVolumeClaim:
+            claimName: horizon-mongo-notifications-volume

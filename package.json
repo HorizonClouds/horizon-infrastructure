@@ -7,6 +7,7 @@
     "test": "vitest",
     "test:integration": "vitest"
   },
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/HorizonClouds/horizon-infrastructure.git"
@@ -26,6 +27,7 @@
   "devDependencies": {
     "axios": "^1.7.9",
     "dotenv": "^16.4.7",
+    "js-yaml": "^4.1.0",
     "jsonwebtoken": "^9.0.2",
     "vitest": "^2.1.8"
   }

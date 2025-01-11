@@ -1,0 +1,157 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: >-
+      C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe convert
+      -f ../docker-horizon/docker-compose-dev.yaml
+    kompose.version: 1.35.0 (9532ceef3)
+  labels:
+    io.kompose.service: feeds
+  name: feeds
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: feeds
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: >-
+          C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+          convert -f ../docker-horizon/docker-compose-dev.yaml
+        kompose.version: 1.35.0 (9532ceef3)
+      labels:
+        io.kompose.service: feeds
+    spec:
+      containers:
+        - env:
+            - name: BACKEND_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: feeds-secrets_BACKEND_PORT
+            - name: CBREAKER_FAILURE_THRESHOLD
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: feeds-secrets_CBREAKER_FAILURE_THRESHOLD
+            - name: CBREAKER_RESET_TIMEOUT
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: feeds-secrets_CBREAKER_RESET_TIMEOUT
+            - name: CBREAKER_SUCCESS_THRESHOLD
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: feeds-secrets_CBREAKER_SUCCESS_THRESHOLD
+            - name: GATEWAY_URL
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: feeds-secrets_GATEWAY_URL
+            - name: INFRASTRUCTURE_INTEGRATION
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: feeds-secrets_INFRASTRUCTURE_INTEGRATION
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: feeds-secrets_JWT_SECRET
+            - name: KAFKA_BROKER
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: feeds-secrets_KAFKA_BROKER
+            - name: KAFKA_ENABLED
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: feeds-secrets_KAFKA_ENABLED
+            - name: KAFKA_SERVICE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: feeds-secrets_KAFKA_SERVICE_NAME
+            - name: KAFKA_TOPIC
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: feeds-secrets_KAFKA_TOPIC
+            - name: LOGLEVEL
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: feeds-secrets_LOGLEVEL
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: feeds-secrets_MONGODB_URI
+            - name: NODE_ENV
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: feeds-secrets_NODE_ENV
+            - name: REDIS_CACHE_ENABLED
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: feeds-secrets_REDIS_CACHE_ENABLED
+            - name: REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: feeds-secrets_REDIS_HOST
+            - name: REDIS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: feeds-secrets_REDIS_PORT
+            - name: REDIS_TTL
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: feeds-secrets_REDIS_TTL
+            - name: RL_MAX_REQUESTS_PER_MINUTE
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: feeds-secrets_RL_MAX_REQUESTS_PER_MINUTE
+            - name: RL_MIN_INTERVAL_BETWEEN_REQUESTS
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: feeds-secrets_RL_MIN_INTERVAL_BETWEEN_REQUESTS
+            - name: THROTTLE_MAX
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: feeds-secrets_THROTTLE_MAX
+            - name: THROTTLE_WINDOW_MS
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: feeds-secrets_THROTTLE_WINDOW_MS
+          image: javifdez7/horizon-feeds:develop
+          name: horizon-feeds
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          resources:
+            limits:
+              memory: '419430400'
+          volumeMounts:
+            - mountPath: /opt/app/logs
+              name: feeds-claim0
+          imagePullPolicy: Always
+      restartPolicy: Always
+      volumes:
+        - name: feeds-claim0
+          persistentVolumeClaim:
+            claimName: feeds-claim0

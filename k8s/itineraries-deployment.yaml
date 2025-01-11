@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: >-
+      C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe convert
+      -f ../docker-horizon/docker-compose-dev.yaml
+    kompose.version: 1.35.0 (9532ceef3)
+  labels:
+    io.kompose.service: itineraries
+  name: itineraries
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: itineraries
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: >-
+          C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+          convert -f ../docker-horizon/docker-compose-dev.yaml
+        kompose.version: 1.35.0 (9532ceef3)
+      labels:
+        io.kompose.service: itineraries
+    spec:
+      containers:
+        - env:
+            - name: BACKEND_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: itineraries-secrets_BACKEND_PORT
+            - name: GATEWAY_URL
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: itineraries-secrets_GATEWAY_URL
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: itineraries-secrets_JWT_SECRET
+            - name: KAFKA_BROKER
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: itineraries-secrets_KAFKA_BROKER
+            - name: KAFKA_ENABLED
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: itineraries-secrets_KAFKA_ENABLED
+            - name: KAFKA_SERVICE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: itineraries-secrets_KAFKA_SERVICE_NAME
+            - name: KAFKA_TOPIC
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: itineraries-secrets_KAFKA_TOPIC
+            - name: LOG_LEVEL
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: itineraries-secrets_LOG_LEVEL
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: itineraries-secrets_MONGODB_URI
+            - name: NODE_ENV
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: itineraries-secrets_NODE_ENV
+          image: javifdez7/horizon-itineraries:develop
+          name: horizon-itineraries
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          resources:
+            limits:
+              memory: '419430400'
+          imagePullPolicy: Always
+      restartPolicy: Always

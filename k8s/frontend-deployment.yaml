@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: >-
+      C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe convert
+      -f ../docker-horizon/docker-compose-dev.yaml
+    kompose.version: 1.35.0 (9532ceef3)
+  labels:
+    io.kompose.service: frontend
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: frontend
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: >-
+          C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+          convert -f ../docker-horizon/docker-compose-dev.yaml
+        kompose.version: 1.35.0 (9532ceef3)
+      labels:
+        io.kompose.service: frontend
+    spec:
+      containers:
+        - env:
+            - name: BASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: frontend-secrets_GATEWAY_URL
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: frontend-secrets_JWT_SECRET
+            - name: NODE_ENV
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: frontend-secrets_NODE_ENV
+            - name: PORT
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: frontend-secrets_PORT
+          image: javifdez7/horizon-frontend:develop
+          name: horizon-frontend
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          resources:
+            limits:
+              memory: '419430400'
+          imagePullPolicy: Always
+      restartPolicy: Always

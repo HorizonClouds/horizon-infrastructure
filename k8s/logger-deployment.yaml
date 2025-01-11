@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: >-
+      C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe convert
+      -f ../docker-horizon/docker-compose-dev.yaml
+    kompose.version: 1.35.0 (9532ceef3)
+  labels:
+    io.kompose.service: logger
+  name: logger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: logger
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: >-
+          C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+          convert -f ../docker-horizon/docker-compose-dev.yaml
+        kompose.version: 1.35.0 (9532ceef3)
+      labels:
+        io.kompose.service: logger
+    spec:
+      containers:
+        - env:
+            - name: BACKEND_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: logger-secrets_BACKEND_PORT
+            - name: KAFKA_BROKER
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: logger-secrets_KAFKA_BROKER
+            - name: KAFKA_TOPIC
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: logger-secrets_KAFKA_TOPIC
+            - name: LOG_FILE_PATH
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-secrets
+                  key: logger-secrets_LOG_FILE_PATH
+          image: javifdez7/horizon-logger:develop
+          name: horizon-logger
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          resources:
+            limits:
+              memory: '419430400'
+          volumeMounts:
+            - mountPath: /opt/app/logs
+              name: logger-claim0
+          imagePullPolicy: Always
+      restartPolicy: Always
+      volumes:
+        - name: logger-claim0
+          persistentVolumeClaim:
+            claimName: logger-claim0
